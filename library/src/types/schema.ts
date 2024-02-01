@@ -53,8 +53,35 @@ export type SchemaResult<TOutput> =
 /**
  * Schema metadata type.
  */
-export interface SchemaMetadata {
+export interface SchemaMetadata<T = any> {
+  /**
+   * The title of the schema.
+   */
+  title?: string;
+  /**
+   * A brief description of the schema.
+   */
   description?: string;
+
+  /**
+   * The `examples` is a place to provide an array of examples that validate against the schema.
+   */
+  examples?: T[];
+
+  /**
+   * The `readOnly` keyword indicates that the value of the instance is managed exclusively by the owning authority, and attempts by an application to modify the value of this property are expected to be ignored or rejected by that owning authority.
+   */
+  readOnly?: boolean;
+
+  /**
+   * The `writeOnly` keyword indicates that the value is never present when the instance is retrieved from the owning authority.
+   */
+  writeOnly?: boolean;
+
+  /**
+   *  The instance value of the schema should not be used and the schema may be removed in the future.
+   */
+  deprecated?: boolean;
 }
 
 /**
@@ -65,12 +92,10 @@ export type BaseSchema<TInput = any, TOutput = TInput> = {
    * Whether it's async.
    */
   async: false;
-
   /**
    * Schema metadata.
    */
   metadata?: SchemaMetadata;
-
   /**
    * Parses unknown input based on its schema.
    *
@@ -98,6 +123,10 @@ export type BaseSchemaAsync<TInput = any, TOutput = TInput> = {
    * Whether it's async.
    */
   async: true;
+  /**
+   * Schema metadata.
+   */
+  metadata?: SchemaMetadata;
   /**
    * Parses unknown input based on its schema.
    *

@@ -5,55 +5,50 @@ import { restAndDefaultArgs } from './restAndDefaultArgs.ts';
 
 describe('restAndDefaultArgs', () => {
   test('should return tuple args', () => {
-    expect(restAndDefaultArgs(undefined, undefined, undefined)).toEqual([
-      undefined,
-      undefined,
-      undefined,
-    ]);
-    expect(restAndDefaultArgs(string(), undefined, undefined)).toEqual([
-      comparable(string()),
-      undefined,
-      undefined,
-    ]);
-    expect(restAndDefaultArgs(string(), [], undefined)).toEqual([
+    expect(
+      restAndDefaultArgs(undefined, undefined, undefined, undefined)
+    ).toEqual([undefined, undefined, undefined, undefined]);
+    expect(
+      restAndDefaultArgs(string(), undefined, undefined, undefined)
+    ).toEqual([comparable(string()), undefined, undefined, undefined]);
+    expect(restAndDefaultArgs(string(), [], undefined, undefined)).toEqual([
       comparable(string()),
       undefined,
       [],
+      undefined,
     ]);
-    expect(restAndDefaultArgs(string(), 'error', undefined)).toEqual([
+    expect(restAndDefaultArgs(string(), 'error', undefined, undefined)).toEqual(
+      [comparable(string()), 'error', undefined, undefined]
+    );
+    expect(restAndDefaultArgs(string(), 'error', [], undefined)).toEqual([
       comparable(string()),
       'error',
+      [],
       undefined,
     ]);
-    expect(restAndDefaultArgs(string(), 'error', [])).toEqual([
-      comparable(string()),
-      'error',
-      [],
-    ]);
-    expect(restAndDefaultArgs([], undefined, undefined)).toEqual([
+    expect(restAndDefaultArgs([], undefined, undefined, undefined)).toEqual([
       undefined,
       undefined,
       [],
-    ]);
-    expect(restAndDefaultArgs('error', undefined, undefined)).toEqual([
-      undefined,
-      'error',
       undefined,
     ]);
-    expect(restAndDefaultArgs('error', [], undefined)).toEqual([
-      undefined,
-      'error',
-      [],
-    ]);
-    expect(restAndDefaultArgs(undefined, 'error', undefined)).toEqual([
-      undefined,
-      'error',
-      undefined,
-    ]);
-    expect(restAndDefaultArgs(undefined, 'error', [])).toEqual([
+    expect(
+      restAndDefaultArgs('error', undefined, undefined, undefined)
+    ).toEqual([undefined, 'error', undefined, undefined]);
+    expect(restAndDefaultArgs('error', [], undefined, undefined)).toEqual([
       undefined,
       'error',
       [],
+      undefined,
+    ]);
+    expect(
+      restAndDefaultArgs(undefined, 'error', undefined, undefined)
+    ).toEqual([undefined, 'error', undefined, undefined]);
+    expect(restAndDefaultArgs(undefined, 'error', [], undefined)).toEqual([
+      undefined,
+      'error',
+      [],
+      undefined,
     ]);
   });
 });

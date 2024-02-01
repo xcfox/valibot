@@ -4,6 +4,7 @@ import type {
   ErrorMessage,
   Pipe,
   PipeAsync,
+  SchemaMetadata,
 } from '../../types/index.ts';
 import { defaultArgs } from '../defaultArgs/index.ts';
 
@@ -13,6 +14,7 @@ import { defaultArgs } from '../defaultArgs/index.ts';
  * @param arg1 First argument.
  * @param arg2 Second argument.
  * @param arg3 Third argument.
+ * @param arg4 Fourth argument.
  *
  * @returns The tuple arguments.
  */
@@ -20,17 +22,24 @@ export function restAndDefaultArgs<
   TRest extends BaseSchema | BaseSchemaAsync | undefined,
   TPipe extends Pipe<any> | PipeAsync<any>
 >(
-  arg1: TPipe | ErrorMessage | TRest | undefined,
-  arg2: TPipe | ErrorMessage | undefined,
-  arg3: TPipe | undefined
-): [TRest, ErrorMessage | undefined, TPipe | undefined] {
+  arg1: SchemaMetadata | TPipe | ErrorMessage | TRest | undefined,
+  arg2: SchemaMetadata | TPipe | ErrorMessage | undefined,
+  arg3: SchemaMetadata | TPipe | undefined,
+  arg4?: SchemaMetadata | undefined
+): [
+  TRest,
+  ErrorMessage | undefined,
+  TPipe | undefined,
+  SchemaMetadata | undefined
+] {
   if (!arg1 || (typeof arg1 === 'object' && !Array.isArray(arg1))) {
-    const [error, pipe] = defaultArgs(arg2, arg3);
-    return [arg1 as TRest, error, pipe];
+    const [error, pipe, metadata] = defaultArgs(arg2, arg3, arg4);
+    return [arg1 as TRest, error, pipe, metadata];
   }
-  const [error, pipe] = defaultArgs<TPipe>(
-    arg1 as TPipe | ErrorMessage | undefined,
-    arg2 as TPipe | undefined
+  const [error, pipe, metadata] = defaultArgs<TPipe>(
+    arg1 as SchemaMetadata | TPipe | ErrorMessage | undefined,
+    arg2 as SchemaMetadata | TPipe | undefined,
+    arg3 as SchemaMetadata | undefined
   );
-  return [undefined as TRest, error, pipe];
+  return [undefined as TRest, error, pipe, metadata];
 }
