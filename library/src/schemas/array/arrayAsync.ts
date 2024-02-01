@@ -6,6 +6,7 @@ import type {
   Issues,
   Output,
   PipeAsync,
+  SchemaMetadata,
 } from '../../types/index.ts';
 import {
   defaultArgs,
@@ -45,12 +46,14 @@ export type ArraySchemaAsync<
  *
  * @param item The item schema.
  * @param pipe A validation and transformation pipe.
+ * @param metadata The schema metadata.
  *
  * @returns An async array schema.
  */
 export function arrayAsync<TItem extends BaseSchema | BaseSchemaAsync>(
   item: TItem,
-  pipe?: PipeAsync<Output<TItem>[]>
+  pipe?: PipeAsync<Output<TItem>[]>,
+  metadata?: SchemaMetadata<Input<TItem>>
 ): ArraySchemaAsync<TItem>;
 
 /**
@@ -59,22 +62,45 @@ export function arrayAsync<TItem extends BaseSchema | BaseSchemaAsync>(
  * @param item The item schema.
  * @param message The error message.
  * @param pipe A validation and transformation pipe.
+ * @param metadata The schema metadata.
  *
  * @returns An async array schema.
  */
 export function arrayAsync<TItem extends BaseSchema | BaseSchemaAsync>(
   item: TItem,
   message?: ErrorMessage,
-  pipe?: PipeAsync<Output<TItem>[]>
+  pipe?: PipeAsync<Output<TItem>[]>,
+  metadata?: SchemaMetadata<Input<TItem>>
+): ArraySchemaAsync<TItem>;
+
+/**
+ * Creates an async array schema.
+ *
+ * @param item The item schema.
+ * @param metadata The schema metadata.
+ *
+ * @returns An async array schema.
+ */
+export function arrayAsync<TItem extends BaseSchema | BaseSchemaAsync>(
+  item: TItem,
+  metadata?: SchemaMetadata<Input<TItem>>
 ): ArraySchemaAsync<TItem>;
 
 export function arrayAsync<TItem extends BaseSchema | BaseSchemaAsync>(
   item: TItem,
-  arg2?: ErrorMessage | PipeAsync<Output<TItem>[]>,
-  arg3?: PipeAsync<Output<TItem>[]>
+  arg2?:
+    | SchemaMetadata<Input<TItem>>
+    | PipeAsync<Output<TItem>[]>
+    | ErrorMessage,
+  arg3?: SchemaMetadata<Input<TItem>> | PipeAsync<Output<TItem>[]>,
+  arg4?: SchemaMetadata<Input<TItem>>
 ): ArraySchemaAsync<TItem> {
   // Get message and pipe argument
-  const [message = 'Invalid type', pipe] = defaultArgs(arg2, arg3);
+  const [message = 'Invalid type', pipe, metadata] = defaultArgs(
+    arg2,
+    arg3,
+    arg4
+  );
 
   // Create and return async array schema
   return {
@@ -82,6 +108,7 @@ export function arrayAsync<TItem extends BaseSchema | BaseSchemaAsync>(
     async: true,
     item,
     message,
+    metadata,
     pipe,
     async _parse(input, info) {
       // Check type of input

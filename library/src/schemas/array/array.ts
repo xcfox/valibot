@@ -5,6 +5,7 @@ import type {
   Issues,
   Output,
   Pipe,
+  SchemaMetadata,
 } from '../../types/index.ts';
 import {
   defaultArgs,
@@ -44,12 +45,14 @@ export type ArraySchema<
  *
  * @param item The item schema.
  * @param pipe A validation and transformation pipe.
+ * @param metadata The schema metadata.
  *
  * @returns A array schema.
  */
 export function array<TItem extends BaseSchema>(
   item: TItem,
-  pipe?: Pipe<Output<TItem>[]>
+  pipe?: Pipe<Output<TItem>[]>,
+  metadata?: SchemaMetadata<Input<TItem>>
 ): ArraySchema<TItem>;
 
 /**
@@ -58,27 +61,48 @@ export function array<TItem extends BaseSchema>(
  * @param item The item schema.
  * @param message The error message.
  * @param pipe A validation and transformation pipe.
+ * @param metadata The schema metadata.
  *
  * @returns A array schema.
  */
 export function array<TItem extends BaseSchema>(
   item: TItem,
   message?: ErrorMessage,
-  pipe?: Pipe<Output<TItem>[]>
+  pipe?: Pipe<Output<TItem>[]>,
+  metadata?: SchemaMetadata<Input<TItem>>
+): ArraySchema<TItem>;
+
+/**
+ * Creates a array schema.
+ *
+ * @param item The item schema.
+ * @param metadata The schema metadata.
+ *
+ * @returns A array schema.
+ */
+export function array<TItem extends BaseSchema>(
+  item: TItem,
+  metadata?: SchemaMetadata<Input<TItem>>
 ): ArraySchema<TItem>;
 
 export function array<TItem extends BaseSchema>(
   item: TItem,
-  arg2?: ErrorMessage | Pipe<Output<TItem>[]>,
-  arg3?: Pipe<Output<TItem>[]>
+  arg2?: SchemaMetadata<Input<TItem>> | Pipe<Output<TItem>[]> | ErrorMessage,
+  arg3?: SchemaMetadata<Input<TItem>> | Pipe<Output<TItem>[]>,
+  arg4?: SchemaMetadata<Input<TItem>>
 ): ArraySchema<TItem> {
-  // Get message and pipe argument
-  const [message = 'Invalid type', pipe] = defaultArgs(arg2, arg3);
+  // Get message, pipe argument and metadata
+  const [message = 'Invalid type', pipe, metadata] = defaultArgs(
+    arg2,
+    arg3,
+    arg4
+  );
 
   // Create and return array schema
   return {
     type: 'array',
     async: false,
+    metadata,
     item,
     message,
     pipe,
